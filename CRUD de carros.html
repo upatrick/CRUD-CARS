@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style> body {background: #2b2d42;}</style>
+</head>
+<body>
+    <script>
+        // Inicialização das variáveis
+        let carros = [];
+        let id = 0;
+
+        // Função para cadastrar um novo veículo
+        function cadastrarVeiculo() {
+            id++;
+            let modelo = prompt("Digite o modelo do veículo:");
+            let marca = prompt("Digite a marca do veículo:");
+            let ano = prompt("Digite o ano do veículo:");
+            let cor = prompt("Digite a cor do veículo:");
+            let preco = prompt("Digite o preço do veículo:");
+
+            let novoVeiculo = {
+                id: id,
+                modelo: modelo,
+                marca: marca,
+                ano: ano,
+                cor: cor,
+                preco: preco
+            };
+
+            carros.push(novoVeiculo);
+            alert("Veículo cadastrado com sucesso!");
+        }
+
+        // Função para listar todos os veículos
+        function listarVeiculos() {
+            if (carros.length == 0) {
+                alert("Não há veículos cadastrados");
+            } else {
+                carros.sort(function(a, b){return a.preco - b.preco}); // Ordena a lista pelo preço
+                let listaVeiculos = "";
+                for (let i = 0; i < carros.length; i++) {
+                let veiculo = carros[i];
+                listaVeiculos += "ID: " + veiculo.id + " | Modelo: " + veiculo.modelo + " | Marca: " + veiculo.marca + " | Ano: " + veiculo.ano + " | Cor: " + veiculo.cor + " | Preço: R$" + veiculo.preco + "\n";
+                }
+                alert(listaVeiculos);
+            }
+        }
+
+        // Função para filtrar veículos por marca
+        function filtrarPorMarca() {
+            let marca = prompt("Digite a marca para filtrar:");
+            let listaVeiculos = "";
+            for (let i = 0; i < carros.length; i++) {
+                let veiculo = carros[i];
+                if (veiculo.marca.toLowerCase() == marca.toLowerCase()) {
+                listaVeiculos += "ID: " + veiculo.id + " | Modelo: " + veiculo.modelo + " | Cor: " + veiculo.cor + " | Preço: R$" + veiculo.preco + "\n";
+                }
+            }
+            if (listaVeiculos == "") {
+                alert("Não foram encontrados veículos dessa marca");
+            } else {
+                alert(listaVeiculos);
+            }
+        }
+
+        // Função para atualizar um veículo
+        function atualizarVeiculo() {
+            let idVeiculo = prompt("Digite o ID do veículo a ser atualizado:");
+            let veiculoEncontrado = false;
+            for (let i = 0; i < carros.length; i++) {
+                let veiculo = carros[i];
+                if (veiculo.id == idVeiculo) {
+                veiculoEncontrado = true;
+                let corNova = prompt("Digite a nova cor do veículo:");
+                let precoNovo = prompt("Digite o novo preço do veículo:");
+                veiculo.cor = corNova;
+                veiculo.preco = precoNovo;
+                alert("Veículo atualizado com sucesso!");
+                }
+            }
+            if (!veiculoEncontrado) {
+                alert("Veículo não encontrado. Volte para o menu inicial");
+            }
+        }
+
+        function removerVeiculo() {
+            const id = prompt("Digite o ID do veículo que deseja remover:");
+
+            const veiculoIndex = carros.findIndex((veiculo) => veiculo.id === parseInt(id));
+
+            if (veiculoIndex === -1) {
+                alert("Veículo não encontrado. Volte para o menu inicial.");
+                return;
+            }
+
+            const confirmacao = confirm("Tem certeza que deseja remover o veículo?");
+
+            if (confirmacao) {
+                carros.splice(veiculoIndex, 1);
+                atualizarNumeroDeVeiculos();
+                alert("Veículo removido com sucesso.");
+            } else {
+                alert("Operação cancelada.");
+            }
+        }
+
+        function ordenarVeiculosPorPreco() {
+            carros.sort((a, b) => a.preco - b.preco);
+        }
+
+        function filtrarVeiculosPorMarca() {
+            const marca = prompt("Digite a marca que deseja filtrar:");
+
+            const veiculosFiltrados = carros.filter(
+                (veiculo) => veiculo.marca.toLowerCase() === marca.toLowerCase()
+            );
+
+            if (veiculosFiltrados.length === 0) {
+                alert("Nenhum veículo encontrado.");
+                return;
+            }
+
+            ordenarVeiculosPorPreco();
+
+            let carrosFormatada = "";
+            for (let i = 0; i < veiculosFiltrados.length; i++) {
+                const veiculo = veiculosFiltrados[i];
+                carrosFormatada += `ID: ${veiculo.id} | Modelo: ${veiculo.modelo} | Cor: ${veiculo.cor} | Preço: R$ ${veiculo.preco}\n`;
+            }
+
+            alert(carrosFormatada);
+        }
+
+        function atualizarNumeroDeVeiculos() {
+            const id = prompt("Digite o ID do veículo que deseja atualizar:");
+
+            const veiculo = carros.find((veiculo) => veiculo.id === parseInt(id));
+
+            if (!veiculo) {
+                alert("Veículo não encontrado. Volte para o menu inicial.");
+                return;
+            }
+
+            const cor = prompt("Digite a nova cor:");
+            const preco = parseFloat(prompt("Digite o novo preço:"));
+
+            veiculo.cor = cor;
+            veiculo.preco = preco;
+
+            alert("Veículo atualizado com sucesso.");
+        }
+
+        function exibirMenu() {
+            let opcao = parseInt(
+                prompt(`Bem-vindo ao sistema de CRUD de veículos:\n\nNo momento, o sistema tem ${id} carros cadastrados!\n\nEscolha uma das opções para interagir com o sistema:\n\n1 - Cadastrar veículo\n2 - Listar todos os veículos \n3 - Filtrar veículos por marca\n4 - Atualizar veículo\n5 - Remover veículo\n6 - Sair do sistema`)
+            );
+
+            
+            switch (opcao) {
+                case 1:
+                cadastrarVeiculo();
+                break;
+                case 2:
+                listarVeiculos();
+                break;
+                case 3:
+                filtrarPorMarca();
+                break;
+                case 4:
+                atualizarVeiculo();
+                break;
+                case 5:
+                removerVeiculo();
+                break;
+                case 6:
+                alert("Saindo do sistema.");
+                break;
+                default:
+                alert("Opção inválida. Tente novamente.");
+                exibirMenu();
+                break;
+                
+            }
+            if(opcao != 6) {
+                exibirMenu()
+            }
+        }
+        
+        exibirMenu();
+    </script>
+</body>
+</html>
